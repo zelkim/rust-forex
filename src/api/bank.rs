@@ -100,11 +100,6 @@ impl Bank {
         &mut self.accounts[idx]
     }
 
-    /// Find an account by name (immutable). Returns `None` if not found.
-    pub fn find_account(&self, name: &str) -> Option<&Account> {
-        self.accounts.iter().find(|a| a.name == name)
-    }
-
     /// Find an account by name (mutable). Returns `None` if not found.
     pub fn find_account_mut(&mut self, name: &str) -> Option<&mut Account> {
         self.accounts.iter_mut().find(|a| a.name == name)

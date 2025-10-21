@@ -39,14 +39,12 @@ impl Forex {
         self
     }
 
-    /// Record an exchange rate for `code`.
-    /// Note: current behavior inserts a new entry if missing; it does NOT update
-    /// an existing rate.
+    /// Update the exchange rate for an existing currency `code`.
+    /// - If the currency exists, its rate is updated.
     pub fn set_rate(&mut self, code: &str, rate: f64) {
-        let code = code.to_string();
-        self.catalog
-            .entry(code.clone())
-            .or_insert(Currency { code: code.clone(), name: code.clone(), rate: rate });
+        if let Some(curr) = self.catalog.get_mut(code) {
+            curr.rate = rate;
+        }
     }
 
     /// Get a reference to the rate for `code` if present.

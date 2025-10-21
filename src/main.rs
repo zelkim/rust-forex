@@ -1,5 +1,5 @@
 mod api { pub mod account; pub mod bank; pub mod forex; }
-mod view { pub mod console; }
+mod view { pub mod console; pub mod console_util; }
 use api::forex::Forex;
 use api::bank::Bank;
 use view::console::ConsoleApp;

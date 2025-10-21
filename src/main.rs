@@ -1,18 +1,26 @@
-mod forex; 
-use forex::Forex;
+mod api { pub mod account; pub mod bank; pub mod forex; }
+mod view { pub mod console; }
+use api::forex::Forex;
+use api::bank::Bank;
+use view::console::ConsoleApp;
 
 fn main() {
-    println!("Hello, world!");
-
     // Initial exchange rate retrieved from bsp.gov.ph on 10/20/2025
-    let mut forex = Forex::new()
-        .create_rate("PHP", 1.0)
-        .create_rate("USD", 58.1130)
-        .create_rate("JPY", 0.3865)
-        .create_rate("GBP", 78.0632)
-        .create_rate("EUR", 67.7598)
-        .create_rate("CNY", 8.1531)
+    let forex = Forex::new()
+        .create_currency("PHP", "Philippine Peso", 1.0)
+        .create_currency("USD", "US Dollar", 58.1130)
+        .create_currency("JPY", "Japanese Yen", 0.3865)
+        .create_currency("GBP", "British Pound", 78.0632)
+        .create_currency("EUR", "Euro", 67.7598)
+        .create_currency("CNY", "Chinese Yuan", 8.1531)
         .set_base_rate("PHP");
-    
-    println!("Available currencies: {:?}", forex.currencies());
+
+    let bank = Bank::new()
+        .set_forex(forex)
+        .set_annual_interest(0.05)
+        .set_base_currency("PHP")
+        .build();
+
+    let mut app = ConsoleApp::new(bank);
+    app.run();
 }

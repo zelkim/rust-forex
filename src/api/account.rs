@@ -1,23 +1,32 @@
-// Moved from src/account.rs without changes.
+/// Transaction types supported by an Account.
+/// - Deposit adds a positive amount
+/// - Withdraw records a negative amount (see `create_transaction`)
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum TransactionType {
     Deposit,
     Withdraw,
 }
 
+/// Immutable transaction record containing the signed value applied
+/// to the account balance.
 #[derive(Debug, Clone, Copy)]
 pub struct Transaction {
     pub value: f64,
 }
 
+/// Bank account model that keeps a running list of transactions and
+/// computes balances and interest forecasts. The annual interest is
+/// stored per-account so different accounts can have different rates.
 #[derive(Debug, Clone)]
 pub struct Account {
     pub name: String,
     pub transactions: Vec<Transaction>,
-    pub annual_interest: f64, // as a fraction, e.g., 0.05 for 5%
+    pub annual_interest: f64,
 }
 
 impl Account {
+    /// Create a new account with a default annual interest (5%).
+    /// Simple constructor analogous to constructors in C/Java.
     pub fn new(name: &str) -> Self {
         Self {
             name: name.to_string(),
@@ -26,6 +35,8 @@ impl Account {
         }
     }
 
+    /// Create a new account with an explicit annual interest rate.
+    /// Useful when the `Bank` wishes to attach its configured rate.
     pub fn with_interest(name: &str, annual_interest: f64) -> Self {
         Self {
             name: name.to_string(),
@@ -34,6 +45,9 @@ impl Account {
         }
     }
 
+    /// Append a transaction. The `amount` must be > 0.
+    /// - Deposit: the stored value is `+amount`.
+    /// - Withdraw: the stored value is `-amount`.
     pub fn create_transaction(&mut self, tx_type: TransactionType, amount: f64) {
         assert!(amount > 0.0, "amount must be > 0");
         let value = match tx_type {
@@ -43,15 +57,14 @@ impl Account {
         self.transactions.push(Transaction { value });
     }
 
+    /// Compute the current balance as the sum of all transaction values.
     pub fn get_balance(&self) -> f64 {
         self.transactions.iter().map(|t| t.value).sum()
     }
 
-    pub fn get_daily_interest(&self) -> f64 {
-        let daily_rate = self.annual_interest / 365.0;
-        self.get_balance() * daily_rate
-    }
-
+    /// Produce a day-by-day compound interest projection using
+    /// Daily Interest = Balance × (Annual Rate / 365).
+    /// The balance is incremented each day by that day's interest.
     pub fn get_interest_forecast(&self, days: usize) -> Vec<InterestForecast> {
         let daily_rate = self.annual_interest / 365.0;
         let mut balance = self.get_balance();

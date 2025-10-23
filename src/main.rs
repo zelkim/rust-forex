@@ -1,3 +1,8 @@
+/********************
+Last names: Robenta*, Lee, Ortega, De Leon
+Language: Rust
+Paradigm(s): Object-oriented with builder pattern, and a procedural flow for the console app 
+********************/
 mod api { pub mod account; pub mod bank; pub mod forex; }
 mod view { pub mod console; pub mod console_util; }
 use api::forex::Forex;

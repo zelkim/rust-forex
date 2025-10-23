@@ -71,6 +71,11 @@ impl ConsoleApp {
             println!("Current Balance: {:.2}", acct.get_balance());
             println!("Currency: {}", currency_code);
             let amount = read_f64_prompt("Withdraw Amount: ");
+
+            if amount > acct.get_balance() {
+                println!("Insufficient balance for withdrawal.");
+                return;
+            }
             acct.create_transaction(TransactionType::Withdraw, amount);
             println!("Updated Balance: {:.2}", acct.get_balance());
         } else {

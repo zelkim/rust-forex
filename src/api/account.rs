@@ -35,14 +35,12 @@ impl Account {
         }
     }
 
-    /// Create a new account with an explicit annual interest rate.
-    /// Useful when the `Bank` wishes to attach its configured rate.
-    pub fn with_interest(name: &str, annual_interest: f64) -> Self {
-        Self {
-            name: name.to_string(),
-            transactions: Vec::new(),
-            annual_interest,
-        }
+    /// Builder method: set the annual interest rate for this account and
+    /// return the updated account for chaining.
+    /// Usage: `let acct = Account::new("Alice").with_interest(0.05);`
+    pub fn with_interest(mut self, annual_interest: f64) -> Self {
+        self.annual_interest = annual_interest;
+        self
     }
 
     /// Append a transaction. The `amount` must be > 0.
@@ -50,6 +48,12 @@ impl Account {
     /// - Withdraw: the stored value is `-amount`.
     pub fn create_transaction(&mut self, tx_type: TransactionType, amount: f64) {
         assert!(amount > 0.0, "amount must be > 0");
+        assert!(
+            tx_type == TransactionType::Withdraw 
+            && self.get_balance() >= amount 
+            || tx_type == TransactionType::Deposit, 
+            "insufficient balance for withdrawal"
+        );
         let value = match tx_type {
             TransactionType::Deposit => amount,
             TransactionType::Withdraw => -amount,

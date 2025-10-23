@@ -94,7 +94,7 @@ impl Bank {
     /// current annual interest rate. Returns a mutable reference so
     /// callers can immediately add transactions.
     pub fn create_account(&mut self, name: &str) -> &mut Account {
-        let acct = Account::with_interest(name, self.annual_interest);
+        let acct = Account::new(name).with_interest(self.annual_interest);
         self.accounts.push(acct);
         let idx = self.accounts.len() - 1;
         &mut self.accounts[idx]

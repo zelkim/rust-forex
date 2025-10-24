@@ -25,6 +25,17 @@ impl ConsoleApp {
             println!("[6] Show Interest Computation");
 
             let choice = read_usize_prompt("");
+
+            if choice < 1 || choice > 6 {
+                println!("Invalid option. Please select 1-6.");
+                continue;
+            }
+
+            if choice != 1 && self.bank.accounts.len() < 1 {
+                println!("Please registered an account through [1] before proceeding.");
+                continue;
+            }
+
             match choice {
                 1 => self.menu_register_account(),
                 2 => self.menu_deposit(),
@@ -145,6 +156,12 @@ impl ConsoleApp {
             println!("Currency: {}", currency_code);
             println!("Interest Rate: {:.0}%", interest_rate * 100.0);
             let days = read_usize_prompt("Total Number of Days: ");
+
+            if days < 1 || days > 999999 {
+                println!("Please enter a valid number of days between 1 and 999999.");
+                return;
+            }
+
             let forecast = acct.get_interest_forecast(days);
             println!("Day \t| Interest \t| Balance |");
             for f in forecast {

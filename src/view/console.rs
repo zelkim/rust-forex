@@ -99,6 +99,11 @@ impl ConsoleApp {
         let (codes, names) = currency_menu_lists(&self.bank);
         print_currency_menu(&names);
         let sel = read_usize_prompt("Select Foreign Currency: ");
+        if self.bank.forex.get_base_rate() == codes.get(sel.saturating_sub(1)).cloned().unwrap_or_default()  {
+            println!("Cannot update the base currency exchange rate.");
+            return;
+        }
+
     if let Some(code) = codes.get(sel.saturating_sub(1)).cloned() {
             let new_rate = read_f64_prompt("Exchange Rate: ");
 

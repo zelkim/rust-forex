@@ -42,6 +42,9 @@ impl Forex {
     /// Update the exchange rate for an existing currency `code`.
     /// - If the currency exists, its rate is updated.
     pub fn set_rate(&mut self, code: &str, rate: f64) {
+        if self.base_currency == code {
+            return;
+        }
         if let Some(curr) = self.catalog.get_mut(code) {
             curr.rate = rate;
         }

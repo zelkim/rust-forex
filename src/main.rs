@@ -12,12 +12,12 @@ use view::console::ConsoleApp;
 fn main() {
     // Initial exchange rate retrieved from bsp.gov.ph on 10/20/2025
     let forex = Forex::new()
-        .create_currency("CNY", "Chinese Yuan", 8.1531)
-        .create_currency("EUR", "Euro", 67.7598)
-        .create_currency("GBP", "British Pound", 78.0632)
-        .create_currency("JPY", "Japanese Yen", 0.3865)
         .create_currency("PHP", "Philippine Peso", 1.0)
         .create_currency("USD", "US Dollar", 58.1130)
+        .create_currency("JPY", "Japanese Yen", 0.3865)
+        .create_currency("GBP", "British Pound", 78.0632)
+        .create_currency("EUR", "Euro", 67.7598)
+        .create_currency("CNY", "Chinese Yuan", 8.1531)
         .set_base_rate("PHP");
 
     let bank = Bank::new()
